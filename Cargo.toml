@@ -1,0 +1,12 @@
+[package]
+name = "radio-math"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+radio-python = [ ]
+
+[dependencies]
+num = "0.4.2"
+rayon = "1.10.0"
+rustfft = "6.2.0"
