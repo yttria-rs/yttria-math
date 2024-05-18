@@ -1,7 +1,7 @@
+pub use super::unit::RadioUnitSqrt;
 pub use super::vector::{
-    BitMath,
-    {ComplexVectorMath, DspComplex, FftVectorMath},
-    {DspFloat, FloatVectorMath},
-    {DspGeneric, GenericVectorMath},
-    {DspInt, IntegerVectorMath},
+    RadioVectorArithmetic, RadioVectorBitwise, RadioVectorComplex, RadioVectorComplexFft,
+    RadioVectorStatistics, RadioVectorUtils,
 };
+
+// BitMath, {ComplexVectorMath, DspComplex, FftVectorMath}, {DspFloat, FloatVectorMath}, {DspGeneric, GenericVectorMath}, {DspInt, IntegerVectorMath},

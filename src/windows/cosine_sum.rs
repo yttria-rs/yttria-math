@@ -1,6 +1,6 @@
-use crate::prelude::*;
+use num::{Float, FromPrimitive};
 
-pub fn cos_sum<T: DspFloat>(n: usize, alpha: T) -> Vec<T> {
+pub fn cos_sum<T: Float + FromPrimitive>(n: usize, alpha: T) -> Vec<T> {
     let mut window = Vec::with_capacity(n);
     unsafe { window.set_len(n) };
     for i in 0..n {
@@ -13,14 +13,14 @@ pub fn cos_sum<T: DspFloat>(n: usize, alpha: T) -> Vec<T> {
     window
 }
 
-pub fn hann<T: DspFloat>(n: usize) -> Vec<T> {
+pub fn hann<T: Float + FromPrimitive>(n: usize) -> Vec<T> {
     cos_sum(
         n,
         T::from_f64(0.5).expect("Could not convert f64 into type"),
     )
 }
 
-pub fn hamming<T: DspFloat>(n: usize) -> Vec<T> {
+pub fn hamming<T: Float + FromPrimitive>(n: usize) -> Vec<T> {
     cos_sum(
         n,
         T::from_f64(25.0f64 / 46.0).expect("Could not convert f64 into type"),

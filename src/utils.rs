@@ -9,16 +9,6 @@ pub fn map<T: Num + Copy>(value: T, from_low: T, from_high: T, to_low: T, to_hig
     (value - from_low) * ((to_high - to_low) / (from_high - from_low)) + to_low
 }
 
-pub(crate) fn partial_clamp<T: Num + Copy + std::cmp::PartialOrd>(value: T, min: T, max: T) -> T {
-    if value < min {
-        min
-    } else if value > max {
-        max
-    } else {
-        value
-    }
-}
-
 pub fn linspace<T: Num + FromPrimitive + Copy>(
     start: T,
     stop: T,
@@ -55,7 +45,7 @@ pub fn linspace<T: Num + FromPrimitive + Copy>(
     out
 }
 
-pub fn arange<T: DspInt>(start: T, stop: T, step: T) -> Vec<T> {
+pub fn arange<T: Num + PartialOrd + Copy>(start: T, stop: T, step: T) -> Vec<T> {
     let mut out = Vec::new();
     let mut curr = start;
 

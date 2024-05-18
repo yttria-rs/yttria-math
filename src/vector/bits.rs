@@ -1,35 +1,16 @@
-use super::integer::DspInt;
-
 use std::mem::size_of;
 
-pub trait DspBitwise<T>:
-    DspInt
-    + std::ops::BitOr<Output = T>
-    + std::ops::BitAnd<Output = T>
-    + std::ops::BitXor<Output = T>
-    + std::ops::Shl<Output = T>
-    + std::ops::Shr<Output = T>
-{
-}
-impl<T> DspBitwise<T> for T where
-    T: DspInt
-        + std::ops::BitOr<Output = T>
-        + std::ops::BitAnd<Output = T>
-        + std::ops::BitXor<Output = T>
-        + std::ops::Shl<Output = T>
-        + std::ops::Shr<Output = T>
-{
-}
+use num::{FromPrimitive, Integer};
 
-pub trait BitMath {
+pub trait RadioVectorBitwise {
     fn packbits(&self) -> Vec<u8>;
     fn unpackbits(&self) -> Vec<u8>;
     fn pack_into<T>(&self) -> T
     where
-        T: DspBitwise<T> + std::ops::Shl<usize, Output = T> + std::ops::BitOr<Output = T>;
+        T: Integer + FromPrimitive + std::ops::Shl<Output = T> + std::ops::BitOr<Output = T>;
 }
 
-impl BitMath for [u8] {
+impl RadioVectorBitwise for [u8] {
     fn packbits(&self) -> Vec<u8> {
         self.chunks(8)
             .map(|x| {
@@ -63,7 +44,7 @@ impl BitMath for [u8] {
 
     fn pack_into<T>(&self) -> T
     where
-        T: DspBitwise<T>,
+        T: Integer + FromPrimitive + std::ops::Shl<Output = T> + std::ops::BitOr<Output = T>,
     {
         assert!(self.len() <= size_of::<T>() * 8);
 
@@ -81,7 +62,7 @@ impl BitMath for [u8] {
 
 #[cfg(test)]
 mod tests {
-    use super::BitMath;
+    use super::RadioVectorBitwise;
 
     #[test]
     fn test_unpack_bits() {
@@ -101,7 +82,7 @@ mod tests {
     #[test]
     fn test_pack_into_u64() {
         let data_unpacked = [1u8, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1];
-        // let expected_packed = [129u8, 15];
+        let expected_packed = [129u8, 15];
 
         let packed: u32 = data_unpacked.pack_into();
         println!("{packed:b}");
