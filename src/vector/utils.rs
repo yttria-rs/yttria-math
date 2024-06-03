@@ -2,7 +2,7 @@ use num::{NumCast, ToPrimitive};
 use rayon::prelude::*;
 use std::any::type_name;
 
-pub trait RadioVectorUtils<T> {
+pub trait YttriaVectorUtils<T> {
     fn repeat(&self, repeats: usize) -> Vec<T>;
     fn tile(&self, repeats: usize) -> Vec<T>;
     fn concatenate(&self, other: &[T]) -> Vec<T>;
@@ -18,7 +18,7 @@ pub trait RadioVectorUtils<T> {
     fn as_type<U: NumCast + Send + Sync>(&self) -> Vec<U>;
 }
 
-impl<T> RadioVectorUtils<T> for [T]
+impl<T> YttriaVectorUtils<T> for [T]
 where
     T: ToPrimitive + Send + Sync + Copy,
 {
@@ -103,7 +103,7 @@ where
 
 #[cfg(test)]
 mod test {
-    use super::RadioVectorUtils;
+    use super::YttriaVectorUtils;
 
     #[test]
     fn test_fftshift() {

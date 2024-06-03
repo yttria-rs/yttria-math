@@ -1,9 +1,9 @@
 use num::{complex::ComplexFloat, Complex, Float};
 use rustfft::{FftNum, FftPlanner};
 
-use super::{RadioVectorArithmetic, RadioVectorComplex};
+use super::{YttriaVectorArithmetic, YttriaVectorComplex};
 
-pub trait RadioVectorComplexFft<T> {
+pub trait YttriaVectorComplexFft<T> {
     fn fft_into(&self, out: &mut [Complex<T>], scratch: &mut [Complex<T>]);
     fn fft(&self) -> Vec<Complex<T>>;
 
@@ -14,7 +14,7 @@ pub trait RadioVectorComplexFft<T> {
     fn irfft(&self) -> Vec<T>;
 }
 
-impl<T> RadioVectorComplexFft<T> for [Complex<T>]
+impl<T> YttriaVectorComplexFft<T> for [Complex<T>]
 where
     T: FftNum + ComplexFloat + Float + Send + Sync + Copy,
 {

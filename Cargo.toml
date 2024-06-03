@@ -1,10 +1,9 @@
 [package]
-name = "radio-math"
+name = "yttria-math"
 version = "0.1.0"
 edition = "2021"
 
 [features]
-radio-python = [ ]
 
 [dependencies]
 num = "0.4.2"

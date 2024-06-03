@@ -1,26 +1,17 @@
 mod arithmetic;
-pub use arithmetic::RadioVectorArithmetic;
+pub use arithmetic::YttriaVectorArithmetic;
 
 mod bits;
-pub use bits::RadioVectorBitwise;
+pub use bits::YttriaVectorBitwise;
 
 mod complex;
-pub use complex::RadioVectorComplex;
+pub use complex::YttriaVectorComplex;
 
 mod fft;
-pub use fft::RadioVectorComplexFft;
+pub use fft::YttriaVectorComplexFft;
 
 mod statistics;
-pub use statistics::RadioVectorStatistics;
+pub use statistics::YttriaVectorStatistics;
 
 mod utils;
-pub use utils::RadioVectorUtils;
-
-// mod float;
-// pub use float::{DspFloat, FloatVectorMath};
-
-// mod generic;
-// pub use generic::{DspGeneric, GenericVectorMath};
-
-// mod integer;
-// pub use integer::{DspInt, IntegerVectorMath};
+pub use utils::YttriaVectorUtils;

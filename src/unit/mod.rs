@@ -1,2 +1,2 @@
 mod sqrt;
-pub use sqrt::RadioUnitSqrt;
+pub use sqrt::YttriaUnitSqrt;

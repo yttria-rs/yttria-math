@@ -1,7 +1,7 @@
 use num::{complex::ComplexFloat, Complex, Float};
 use rayon::prelude::*;
 
-pub trait RadioVectorComplex<T> {
+pub trait YttriaVectorComplex<T> {
     fn real(&self) -> Vec<T>;
     fn imag(&self) -> Vec<T>;
 
@@ -13,7 +13,7 @@ pub trait RadioVectorComplex<T> {
     fn exp_inplace(&mut self);
 }
 
-impl<T> RadioVectorComplex<T> for [Complex<T>]
+impl<T> YttriaVectorComplex<T> for [Complex<T>]
 where
     T: ComplexFloat + Float + Send + Sync + Copy,
 {

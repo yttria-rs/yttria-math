@@ -1,12 +1,12 @@
 use num::integer::Roots;
 
-pub trait RadioUnitSqrt<T> {
+pub trait YttriaUnitSqrt<T> {
     fn sqrt(&self) -> T;
 }
 
 macro_rules! implement_sqrt_roots {
     ( $type_impl:ident ) => {
-        impl RadioUnitSqrt<$type_impl> for $type_impl {
+        impl YttriaUnitSqrt<$type_impl> for $type_impl {
             fn sqrt(&self) -> $type_impl {
                 Roots::sqrt(self)
             }
@@ -16,7 +16,7 @@ macro_rules! implement_sqrt_roots {
 
 macro_rules! implement_sqrt_own {
     ( $type_impl:ident ) => {
-        impl RadioUnitSqrt<$type_impl> for $type_impl {
+        impl YttriaUnitSqrt<$type_impl> for $type_impl {
             fn sqrt(&self) -> $type_impl {
                 $type_impl::sqrt(*self)
             }

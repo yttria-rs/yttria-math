@@ -3,9 +3,9 @@ use std::any::type_name;
 use num::{clamp, traits::Euclid, FromPrimitive, Num};
 use rayon::prelude::*;
 
-use crate::unit::RadioUnitSqrt;
+use crate::unit::YttriaUnitSqrt;
 
-pub trait RadioVectorArithmetic<T> {
+pub trait YttriaVectorArithmetic<T> {
     fn sum(&self) -> T;
 
     fn add_into(&self, other: &[T], out: &mut [T]);
@@ -45,11 +45,11 @@ pub trait RadioVectorArithmetic<T> {
     fn powi_inplace(&mut self, power: u8) -> &mut Self;
 
     fn sqrt_into(&self, out: &mut [T])
-    where T: RadioUnitSqrt<T>;
+    where T: YttriaUnitSqrt<T>;
     fn sqrt(&self) -> Vec<T>
-    where T: RadioUnitSqrt<T>;
+    where T: YttriaUnitSqrt<T>;
     fn sqrt_inplace(&mut self) -> &mut Self
-    where T: RadioUnitSqrt<T>;
+    where T: YttriaUnitSqrt<T>;
 
     fn diff_into(&self, out: &mut [T]);
     fn diff(&self) -> Vec<T>;
@@ -95,7 +95,7 @@ pub trait RadioVectorArithmetic<T> {
         T: FromPrimitive + Euclid;
 }
 
-impl<T> RadioVectorArithmetic<T> for [T]
+impl<T> YttriaVectorArithmetic<T> for [T]
 where
     T: Num + Send + Sync + Copy,
 {
@@ -294,7 +294,7 @@ where
     }
 
     fn sqrt_into(&self, out: &mut [T])
-    where T: RadioUnitSqrt<T>
+    where T: YttriaUnitSqrt<T>
     {
         out.par_iter_mut().zip(self).for_each(|(out, own)| {
             *out = own.sqrt();
@@ -302,7 +302,7 @@ where
     }
 
     fn sqrt(&self) -> Vec<T>
-    where T: RadioUnitSqrt<T>
+    where T: YttriaUnitSqrt<T>
     {
         let mut out = Vec::with_capacity(self.len());
         unsafe { out.set_len(self.len()) }
@@ -311,7 +311,7 @@ where
     }
 
     fn sqrt_inplace(&mut self) -> &mut Self
-    where T: RadioUnitSqrt<T>
+    where T: YttriaUnitSqrt<T>
     {
         self.par_iter_mut().for_each(|own| {
             *own = own.sqrt();
@@ -514,7 +514,7 @@ where
 
 #[cfg(test)]
 mod test {
-    use super::RadioVectorArithmetic;
+    use super::YttriaVectorArithmetic;
 
     #[test]
     fn test_add_i32() {

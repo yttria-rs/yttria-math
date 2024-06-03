@@ -2,7 +2,7 @@ use std::mem::size_of;
 
 use num::{FromPrimitive, Integer};
 
-pub trait RadioVectorBitwise {
+pub trait YttriaVectorBitwise {
     fn packbits(&self) -> Vec<u8>;
     fn unpackbits(&self) -> Vec<u8>;
     fn pack_into<T>(&self) -> T
@@ -10,7 +10,7 @@ pub trait RadioVectorBitwise {
         T: Integer + FromPrimitive + std::ops::Shl<Output = T> + std::ops::BitOr<Output = T>;
 }
 
-impl RadioVectorBitwise for [u8] {
+impl YttriaVectorBitwise for [u8] {
     fn packbits(&self) -> Vec<u8> {
         self.chunks(8)
             .map(|x| {
@@ -62,7 +62,7 @@ impl RadioVectorBitwise for [u8] {
 
 #[cfg(test)]
 mod tests {
-    use super::RadioVectorBitwise;
+    use super::YttriaVectorBitwise;
 
     #[test]
     fn test_unpack_bits() {

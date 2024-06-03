@@ -2,9 +2,9 @@ use std::any::type_name;
 
 use num::{FromPrimitive, Num, ToPrimitive};
 
-use crate::unit::RadioUnitSqrt;
+use crate::unit::YttriaUnitSqrt;
 
-pub trait RadioVectorStatistics<T> {
+pub trait YttriaVectorStatistics<T> {
     fn min(&self) -> T;
     fn max(&self) -> T;
     fn extremes(&self) -> (T, T);
@@ -14,9 +14,9 @@ pub trait RadioVectorStatistics<T> {
     fn std(&self) -> T;
 }
 
-impl<T> RadioVectorStatistics<T> for [T]
+impl<T> YttriaVectorStatistics<T> for [T]
 where
-    T: Num + RadioUnitSqrt<T> + PartialOrd + ToPrimitive + FromPrimitive + Send + Sync + Copy,
+    T: Num + YttriaUnitSqrt<T> + PartialOrd + ToPrimitive + FromPrimitive + Send + Sync + Copy,
 {
     fn min(&self) -> T {
         let mut min = self[0];
@@ -109,7 +109,7 @@ where
 
 #[cfg(test)]
 mod test {
-    use super::RadioVectorStatistics;
+    use super::YttriaVectorStatistics;
 
     #[test]
     fn test_mean_if32() {

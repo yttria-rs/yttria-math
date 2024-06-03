@@ -1,7 +1,5 @@
-pub use super::unit::RadioUnitSqrt;
+pub use super::unit::YttriaUnitSqrt;
 pub use super::vector::{
-    RadioVectorArithmetic, RadioVectorBitwise, RadioVectorComplex, RadioVectorComplexFft,
-    RadioVectorStatistics, RadioVectorUtils,
+    YttriaVectorArithmetic, YttriaVectorBitwise, YttriaVectorComplex, YttriaVectorComplexFft,
+    YttriaVectorStatistics, YttriaVectorUtils,
 };
-
-// BitMath, {ComplexVectorMath, DspComplex, FftVectorMath}, {DspFloat, FloatVectorMath}, {DspGeneric, GenericVectorMath}, {DspInt, IntegerVectorMath},
