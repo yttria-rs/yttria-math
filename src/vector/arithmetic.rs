@@ -45,11 +45,14 @@ pub trait YttriaVectorArithmetic<T> {
     fn powi_inplace(&mut self, power: u8) -> &mut Self;
 
     fn sqrt_into(&self, out: &mut [T])
-    where T: YttriaUnitSqrt<T>;
+    where
+        T: YttriaUnitSqrt<T>;
     fn sqrt(&self) -> Vec<T>
-    where T: YttriaUnitSqrt<T>;
+    where
+        T: YttriaUnitSqrt<T>;
     fn sqrt_inplace(&mut self) -> &mut Self
-    where T: YttriaUnitSqrt<T>;
+    where
+        T: YttriaUnitSqrt<T>;
 
     fn diff_into(&self, out: &mut [T]);
     fn diff(&self) -> Vec<T>;
@@ -97,7 +100,7 @@ pub trait YttriaVectorArithmetic<T> {
 
 impl<T> YttriaVectorArithmetic<T> for [T]
 where
-    T: Num + Send + Sync + Copy,
+    T: Num + Send + Sync + Copy + Clone,
 {
     fn sum(&self) -> T {
         let mut accumulator = T::zero();
@@ -116,8 +119,7 @@ where
             });
     }
     fn add(&self, other: &[T]) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.add_into(other, out.as_mut_slice());
         out
     }
@@ -135,8 +137,7 @@ where
     }
 
     fn add_const(&self, addend: T) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.add_const_into(addend, out.as_mut_slice());
         out
     }
@@ -156,8 +157,7 @@ where
             });
     }
     fn subtract(&self, other: &[T]) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.subtract_into(other, out.as_mut_slice());
         out
     }
@@ -175,8 +175,7 @@ where
     }
 
     fn subtract_const(&self, subtrahend: T) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.subtract_const_into(subtrahend, out.as_mut_slice());
         out
     }
@@ -197,8 +196,7 @@ where
             });
     }
     fn multiply(&self, other: &[T]) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.multiply_into(other, out.as_mut_slice());
         out
     }
@@ -215,8 +213,7 @@ where
         });
     }
     fn multiply_const(&self, multiplier: T) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.multiply_const_into(multiplier, out.as_mut_slice());
         out
     }
@@ -236,8 +233,7 @@ where
             });
     }
     fn divide(&self, other: &[T]) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.divide_into(other, out.as_mut_slice());
         out
     }
@@ -254,8 +250,7 @@ where
         });
     }
     fn divide_const(&self, divisor: T) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.divide_const_into(divisor, out.as_mut_slice());
         out
     }
@@ -276,8 +271,7 @@ where
     }
 
     fn powi(&mut self, power: u8) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) };
+        let mut out = vec![T::zero(); self.len()];
         self.powi_into(power, out.as_mut_slice());
         out
     }
@@ -294,7 +288,8 @@ where
     }
 
     fn sqrt_into(&self, out: &mut [T])
-    where T: YttriaUnitSqrt<T>
+    where
+        T: YttriaUnitSqrt<T>,
     {
         out.par_iter_mut().zip(self).for_each(|(out, own)| {
             *out = own.sqrt();
@@ -302,16 +297,17 @@ where
     }
 
     fn sqrt(&self) -> Vec<T>
-    where T: YttriaUnitSqrt<T>
+    where
+        T: YttriaUnitSqrt<T>,
     {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         self.sqrt_into(&mut out);
         out
     }
 
     fn sqrt_inplace(&mut self) -> &mut Self
-    where T: YttriaUnitSqrt<T>
+    where
+        T: YttriaUnitSqrt<T>,
     {
         self.par_iter_mut().for_each(|own| {
             *own = own.sqrt();
@@ -326,8 +322,7 @@ where
     }
 
     fn diff(&self) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len() - 1);
-        unsafe { out.set_len(self.len() - 1) };
+        let mut out = vec![T::zero(); self.len() - 1];
         self.diff_into(out.as_mut_slice());
         out
     }
@@ -348,8 +343,7 @@ where
     }
 
     fn cumsum(&self) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         self.cumsum_into(&mut out);
         out
     }
@@ -376,8 +370,7 @@ where
     where
         T: PartialOrd,
     {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         self.clamp_into(out.as_mut_slice(), min, max);
         out
     }
@@ -403,8 +396,7 @@ where
     }
 
     fn convolve(&self, other: &[T]) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         self.convolve_into(other, &mut out);
         out
     }
@@ -441,8 +433,7 @@ where
     where
         T: PartialOrd,
     {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         self.interp_into(&mut out, xp, fp);
         out
     }
@@ -470,9 +461,9 @@ where
         T: FromPrimitive + Euclid,
     {
         let period = period.unwrap_or_else(|| {
-            T::from_f64(2.0 * std::f64::consts::PI).expect(
-                format!("Could not convert 2 * pi into type: '{}'", type_name::<T>()).as_str(),
-            )
+            T::from_f64(2.0 * std::f64::consts::PI).unwrap_or_else(|| {
+                panic!("Could not convert 2 * pi into type: '{}'", type_name::<T>())
+            })
         });
         let discont = period / T::from_u8(2).unwrap();
         for idx in 1..(out.len()) {
@@ -486,8 +477,7 @@ where
     where
         T: FromPrimitive + Euclid,
     {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         out[0] = T::zero();
         self.angle_unwrap_into(&mut out, period);
         out
@@ -498,9 +488,9 @@ where
         T: FromPrimitive + Euclid,
     {
         let period = period.unwrap_or_else(|| {
-            T::from_f64(2.0 * std::f64::consts::PI).expect(
-                format!("Could not convert 2 * pi into type: '{}'", type_name::<T>()).as_str(),
-            )
+            T::from_f64(2.0 * std::f64::consts::PI).unwrap_or_else(|| {
+                panic!("Could not convert 2 * pi into type: '{}'", type_name::<T>())
+            })
         });
         let discont = period / T::from_u8(2).unwrap();
         for idx in 1..(self.len()) {

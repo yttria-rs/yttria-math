@@ -15,31 +15,28 @@ pub fn linspace<T: Num + FromPrimitive + Copy>(
     size: usize,
     endpoint: bool,
 ) -> Vec<T> {
-    let mut out = Vec::with_capacity(size);
-    unsafe { out.set_len(size) };
+    let mut out = vec![T::zero(); size];
 
     let delta = if endpoint {
         (stop - start)
-            / T::from_usize(size - 1).expect(
-                format!(
+            / T::from_usize(size - 1).unwrap_or_else(|| {
+                panic!(
                     "Could not convert usize '{size}' into type: {}",
                     type_name::<T>()
                 )
-                .as_str(),
-            )
+            })
     } else {
         (stop - start)
-            / T::from_usize(size).expect(
-                format!(
+            / T::from_usize(size).unwrap_or_else(|| {
+                panic!(
                     "Could not convert usize '{size}' into type: {}",
                     type_name::<T>()
                 )
-                .as_str(),
-            )
+            })
     };
 
-    for i in 0..size {
-        out[i] = start + delta * T::from_usize(i).unwrap();
+    for (i, o) in out.iter_mut().enumerate() {
+        *o = start + delta * T::from_usize(i).unwrap();
     }
 
     out
@@ -73,8 +70,8 @@ pub fn firwin2(numtaps: usize, freqs: &[f64], gains: &[f64], antisymmetric: bool
 
     for i in 0..(freqs.len() - 1) {
         if freqs[i] == freqs[i + 1] {
-            freqs[i] = freqs[i] - f64::EPSILON;
-            freqs[i + 1] = freqs[i + 1] + f64::EPSILON;
+            freqs[i] -= f64::EPSILON;
+            freqs[i + 1] += f64::EPSILON;
         }
     }
 
@@ -129,8 +126,7 @@ pub fn firwin2(numtaps: usize, freqs: &[f64], gains: &[f64], antisymmetric: bool
 
     let out_full = fx2.irfft();
 
-    let mut out = Vec::with_capacity(numtaps);
-    unsafe { out.set_len(numtaps) };
+    let mut out = vec![f64::default(); numtaps];
 
     out.copy_from_slice(&out_full[0..numtaps]);
 

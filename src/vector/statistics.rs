@@ -16,7 +16,15 @@ pub trait YttriaVectorStatistics<T> {
 
 impl<T> YttriaVectorStatistics<T> for [T]
 where
-    T: Num + YttriaUnitSqrt<T> + PartialOrd + ToPrimitive + FromPrimitive + Send + Sync + Copy,
+    T: Num
+        + YttriaUnitSqrt<T>
+        + PartialOrd
+        + ToPrimitive
+        + FromPrimitive
+        + Send
+        + Sync
+        + Copy
+        + Clone,
 {
     fn min(&self) -> T {
         let mut min = self[0];
@@ -65,7 +73,7 @@ where
             let size = self.len() as f64;
 
             for i in self {
-                sum = sum + ToPrimitive::to_f64(i).unwrap();
+                sum += ToPrimitive::to_f64(i).unwrap();
             }
 
             sum /= size;
@@ -89,16 +97,15 @@ where
             let mean = ToPrimitive::to_f64(&self.mean()).unwrap();
             for i in self {
                 let detrended = ToPrimitive::to_f64(i).unwrap() - mean;
-                sum = sum + detrended * detrended;
+                sum += detrended * detrended;
             }
 
-            T::from_f64(sum).expect(
-                format!(
+            T::from_f64(sum).unwrap_or_else(|| {
+                panic!(
                     "Variance is outside of representable range of type {}",
                     type_name::<T>()
                 )
-                .as_str(),
-            )
+            })
         }
     }
 

@@ -17,7 +17,7 @@ impl YttriaVectorBitwise for [u8] {
                 let mut out = 0u8;
                 let mut offset = 7;
                 for i in x {
-                    out |= (*i as u8) << offset;
+                    out |= *i << offset;
                     offset -= 1;
                 }
                 out
@@ -36,7 +36,7 @@ impl YttriaVectorBitwise for [u8] {
                     (x >> 3) & 0x1,
                     (x >> 2) & 0x1,
                     (x >> 1) & 0x1,
-                    (x >> 0) & 0x1,
+                    x & 0x1,
                 ]
             })
             .collect::<Vec<_>>()

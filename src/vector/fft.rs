@@ -1,4 +1,4 @@
-use num::{complex::ComplexFloat, Complex, Float};
+use num::{Complex, Float, Zero};
 use rustfft::{FftNum, FftPlanner};
 
 use super::{YttriaVectorArithmetic, YttriaVectorComplex};
@@ -16,7 +16,7 @@ pub trait YttriaVectorComplexFft<T> {
 
 impl<T> YttriaVectorComplexFft<T> for [Complex<T>]
 where
-    T: FftNum + ComplexFloat + Float + Send + Sync + Copy,
+    T: FftNum + Float + Send + Sync + Copy + Clone,
 {
     fn fft_into(&self, out: &mut [Complex<T>], scratch: &mut [Complex<T>]) {
         let mut planner = FftPlanner::<T>::new();
@@ -32,10 +32,8 @@ where
     }
 
     fn fft(&self) -> Vec<Complex<T>> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
-        let mut scratch = Vec::with_capacity(self.len());
-        unsafe { scratch.set_len(self.len()) }
+        let mut out = vec![Complex::<T>::zero(); self.len()];
+        let mut scratch = vec![Complex::<T>::zero(); self.len()];
 
         self.fft_into(out.as_mut_slice(), scratch.as_mut_slice());
         out
@@ -55,10 +53,8 @@ where
     }
 
     fn ifft(&self) -> Vec<Complex<T>> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
-        let mut scratch = Vec::with_capacity(self.len());
-        unsafe { scratch.set_len(self.len()) }
+        let mut out = vec![Complex::<T>::zero(); self.len()];
+        let mut scratch = vec![Complex::<T>::zero(); self.len()];
 
         self.ifft_into(out.as_mut_slice(), scratch.as_mut_slice());
         out
@@ -66,8 +62,7 @@ where
 
     fn irfft_into(&self, out: &mut [T], scratch: &mut [Complex<T>]) {
         let out_len = 2 * (self.len() - 1);
-        let mut hermitian = Vec::with_capacity(2 * self.len() - 1);
-        unsafe { hermitian.set_len(2 * self.len() - 1) }
+        let mut hermitian = vec![Complex::<T>::zero(); 2 * self.len() - 1];
 
         hermitian[0..(self.len())].clone_from_slice(&self[0..(self.len())]);
         hermitian.conj_inplace();
@@ -96,10 +91,8 @@ where
 
     fn irfft(&self) -> Vec<T> {
         let out_len = 2 * (self.len() - 1);
-        let mut out = Vec::with_capacity(out_len);
-        unsafe { out.set_len(out_len) }
-        let mut scratch = Vec::with_capacity(out_len);
-        unsafe { scratch.set_len(out_len) }
+        let mut out = vec![T::zero(); out_len];
+        let mut scratch = vec![Complex::<T>::zero(); out_len];
 
         self.irfft_into(out.as_mut_slice(), scratch.as_mut_slice());
         out

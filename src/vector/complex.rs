@@ -1,4 +1,4 @@
-use num::{complex::ComplexFloat, Complex, Float};
+use num::{Complex, Float, Zero};
 use rayon::prelude::*;
 
 pub trait YttriaVectorComplex<T> {
@@ -15,7 +15,7 @@ pub trait YttriaVectorComplex<T> {
 
 impl<T> YttriaVectorComplex<T> for [Complex<T>]
 where
-    T: ComplexFloat + Float + Send + Sync + Copy,
+    T: Float + Send + Sync + Copy + Clone,
 {
     fn real(&self) -> Vec<T> {
         self.iter().map(|x| x.re).collect()
@@ -42,8 +42,7 @@ where
     }
 
     fn exp(&self) -> Vec<Complex<T>> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![Complex::<T>::zero(); self.len()];
         self.exp_into(out.as_mut_slice());
         out
     }

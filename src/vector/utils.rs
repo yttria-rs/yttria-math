@@ -1,4 +1,4 @@
-use num::{NumCast, ToPrimitive};
+use num::{Num, NumCast, ToPrimitive};
 use rayon::prelude::*;
 use std::any::type_name;
 
@@ -20,11 +20,10 @@ pub trait YttriaVectorUtils<T> {
 
 impl<T> YttriaVectorUtils<T> for [T]
 where
-    T: ToPrimitive + Send + Sync + Copy,
+    T: Num + ToPrimitive + Send + Sync + Copy + Clone,
 {
     fn repeat(&self, repeats: usize) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len() * repeats);
-        unsafe { out.set_len(self.len() * repeats) };
+        let mut out = vec![T::zero(); self.len() * repeats];
 
         out.par_iter_mut()
             .enumerate()
@@ -34,8 +33,7 @@ where
     }
 
     fn tile(&self, repeats: usize) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len() * repeats);
-        unsafe { out.set_len(self.len() * repeats) };
+        let mut out = vec![T::zero(); self.len() * repeats];
 
         out.par_iter_mut()
             .enumerate()
@@ -45,8 +43,7 @@ where
     }
 
     fn concatenate(&self, other: &[T]) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len() + other.len());
-        unsafe { out.set_len(self.len() + other.len()) };
+        let mut out = vec![T::zero(); self.len() + other.len()];
 
         out[..(self.len())].copy_from_slice(self);
         out[(self.len())..].copy_from_slice(other);
@@ -61,8 +58,7 @@ where
     }
 
     fn roll(&self, shift: usize) -> Vec<T> {
-        let mut out = Vec::with_capacity(self.len());
-        unsafe { out.set_len(self.len()) }
+        let mut out = vec![T::zero(); self.len()];
         self.roll_into(out.as_mut_slice(), shift);
         out
     }
@@ -88,14 +84,13 @@ where
     fn as_type<U: NumCast + Send + Sync>(&self) -> Vec<U> {
         self.par_iter()
             .map(|&value| {
-                U::from(value).expect(
-                    format!(
+                U::from(value).unwrap_or_else(|| {
+                    panic!(
                         "Could not cast type '{}' to '{}'",
                         type_name::<T>(),
                         type_name::<U>()
                     )
-                    .as_str(),
-                )
+                })
             })
             .collect()
     }
