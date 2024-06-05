@@ -1,6 +1,13 @@
 [package]
 name = "yttria-math"
 version = "0.1.0"
+authors = ["Trevor Klingler"]
+description = "A DSP math library tailored for use with the yttria set of libraries"
+readme = "readme.md"
+repository = "https://github.com/yttria-rs/yttria-math"
+license = "MPL-2.0"
+keywords = ["dsp", "radio", "math"]
+categories = ["mathematics"]
 edition = "2021"
 
 [dependencies]
