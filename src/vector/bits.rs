@@ -81,17 +81,17 @@ mod tests {
 
     #[test]
     fn test_pack_into_u64() {
-        let data_unpacked = [1u8, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1];
-        let expected_packed = [129u8, 15];
+        let data = [1u8, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1];
+        let expected_packed = 33_039u16;
 
-        let packed: u32 = data_unpacked.pack_into();
+        let packed: u16 = data.pack_into();
         println!("{packed:b}");
 
-        // assert!(bits.iter().eq(expected_unpacked.iter()));
+        assert!(packed == expected_packed);
 
-        // let recon_data = bits.packbits();
-        // println!("{recon_data:?}");
+        let recon_data = &packed.to_be_bytes().unpackbits();
+        println!("{recon_data:?}");
 
-        // assert!(data.iter().eq(recon_data.iter()));
+        assert!(data.iter().eq(recon_data.iter()));
     }
 }
